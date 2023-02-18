@@ -19,6 +19,19 @@ export const UseState = (props) => {
   });
 
   const [progress, setProgress] = useState(0);
+  const [me, setMe] = useState({
+    _id: "",
+    userName: "",
+    relationShip: "",
+    from: "",
+    city: "",
+    desc: "",
+    following: "",
+    followers: "",
+    coverPicture: "",
+    profilePicture: "",
+    userEmail: "",
+  });
 
   return (
     <UseContext.Provider
@@ -33,6 +46,8 @@ export const UseState = (props) => {
         progress,
         setProgress,
         location,
+        me,
+        setMe,
       }}
     >
       {props.children}
