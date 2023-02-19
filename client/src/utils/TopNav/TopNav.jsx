@@ -4,6 +4,8 @@ import { styled, alpha } from "@mui/material/styles";
 import {
   Add,
   AddAPhotoOutlined,
+  Chat,
+  Login,
   Search as SearchIcon,
 } from "@mui/icons-material/";
 
@@ -25,9 +27,9 @@ import Typewriter from "typewriter-effect";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: "#eeeeee",
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: "#eeeeee",
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -49,7 +51,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
+  color: "Inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -98,9 +100,22 @@ export default function TopNav() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Post</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        {" "}
+        <Avatar
+          sx={{ width: 30, height: 30, marginRight: 1 }}
+          variant="circular"
+          src={process.env.PUBLIC_URL + "/images/profile-1.jpg"}
+          alt="wait"
+        />{" "}
+        Profile
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Chat sx={{ marginX: 1 }} fontSize="small" /> Chat{" "}
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Login sx={{ marginX: 1 }} fontSize="small"></Login>Login
+      </MenuItem>
     </Menu>
   );
 
