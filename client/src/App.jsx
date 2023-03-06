@@ -8,6 +8,10 @@ import AppAlert from "./utils/AppAlert/AppAlert";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 import TopNav from "./utils/TopNav/TopNav";
 import { colors, createTheme, ThemeProvider } from "@mui/material";
+import BasicSpeedDial from "./utils/SpeedDial/SpeedDial";
+import Backdrop from "./utils/Backdrop/Backdrop";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { LoginState } from "./State/Login/LoginState";
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
@@ -22,21 +26,27 @@ function App() {
     },
   });
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <UseState>
-          <TestState>
-            <UseEffectState>
-              <TopLoadingBar />
-              <AppLoader />
-              <AppAlert />
-              <TopNav />
-              <Route />
-            </UseEffectState>
-          </TestState>
-        </UseState>
-      </BrowserRouter>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId="94683515394-hmvlt9807662a50ott2jiro8ukitq6n0.apps.googleusercontent.com">
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <UseState>
+            <TestState>
+              <LoginState>
+                <UseEffectState>
+                  <TopLoadingBar />
+                  <AppLoader />
+                  <AppAlert />
+                  <TopNav />
+                  <Backdrop />
+                  <Route />
+                  <BasicSpeedDial />
+                </UseEffectState>
+              </LoginState>
+            </TestState>
+          </UseState>
+        </BrowserRouter>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

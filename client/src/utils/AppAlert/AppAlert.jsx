@@ -12,6 +12,7 @@ export default function AppAlert() {
         ...appAlert,
         alert: false,
       });
+      // setBackdrop(false)
     }
     setAppAlert({
       ...appAlert,

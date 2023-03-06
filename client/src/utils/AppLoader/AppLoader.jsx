@@ -14,7 +14,7 @@ const AppLoader = () => {
             color: appLoading.color,
             zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
-          open={appLoading.load}
+          open={true}
         >
           <CircularProgress color={"inherit"}>
             {appLoading.color === "danger" ? <ReportIcon color="danger" /> : ""}

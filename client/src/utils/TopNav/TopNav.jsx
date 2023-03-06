@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 import {
   Add,
@@ -23,6 +23,9 @@ import {
   Menu,
 } from "@mui/material/";
 import Typewriter from "typewriter-effect";
+import { useContext } from "react";
+import UseContext from "../../State/UseState/UseContext";
+import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,8 +68,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopNav() {
+  const { me } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -74,13 +78,13 @@ export default function TopNav() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  // const handleMobileMenuClose = () => {
+  //   setMobileMoreAnchorEl(null);
+  // };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
+    // handleMobileMenuClose();
   };
 
   const menuId = "primary-search-account-menu";
@@ -105,21 +109,23 @@ export default function TopNav() {
         <Avatar
           sx={{ width: 30, height: 30, marginRight: 1 }}
           variant="circular"
-          src={process.env.PUBLIC_URL + "/images/profile-1.jpg"}
+          src={me.profilePicture}
           alt="wait"
         />{" "}
-        Profile
+        <Link to={"/profile"}>Profile</Link>{" "}
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Chat sx={{ marginX: 1 }} fontSize="small" /> Chat{" "}
+        <Chat sx={{ marginX: 1 }} fontSize="small" />
+        <Link to={"/chat"}>Chat</Link>{" "}
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Login sx={{ marginX: 1 }} fontSize="small"></Login>Login
+        <Login sx={{ marginX: 1 }} fontSize="small"></Login>{" "}
+        <Link to={"/login"}>Login</Link>{" "}
       </MenuItem>
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  // const mobileMenuId = "primary-search-account-menu-mobile";
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -178,11 +184,7 @@ export default function TopNav() {
               color="inherit"
             >
               <Badge badgeContent={<Add fontSize="0.9rem" />} color="error">
-                <Avatar
-                  variant="circular"
-                  src={process.env.PUBLIC_URL + "/images/profile-1.jpg"}
-                  alt="wait"
-                />
+                <Avatar variant="circular" src={me.profilePicture} alt="wait" />
               </Badge>
             </IconButton>
           </Box>
