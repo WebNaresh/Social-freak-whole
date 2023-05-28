@@ -36,75 +36,75 @@ const TextField1 = () => {
   };
   return (
     <div>
-      {/* {utils.cuurentUserIdForMsg == null ? (
+      {utils.cuurentUserIdForMsg == null ? (
         ""
-      ) : ( */}
-      <>
-        <TextField
-          autoComplete="off"
-          onKeyDown={handleKeyDown}
-          value={msg}
-          onChange={(e) => {
-            setMsg(e.currentTarget.value);
-          }}
-          id="filled-basic1"
-          placeholder="Write Message ..."
-          variant="filled"
-          sx={{
-            position: "fixed",
-            width: {
-              xs: "100%",
-              sm: "100%",
-              md: "22rem",
-              xl: "22rem",
-            },
-            bottom: "2rem",
-            right: "0px",
-            zIndex: 1,
-          }}
-          InputProps={{
-            style: { borderRadius: "100px", margin: "0px 15px" },
-            disableUnderline: true,
-            endAdornment: (
-              <InputAdornment
-                sx={{
-                  marginTop: "0px !important",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                position="start"
-              >
-                <IconButton
-                  disabled={msg.length >= 1 ? false : true}
-                  onClick={sendMessage}
-                  sx={{ padding: "0px" }}
+      ) : (
+        <>
+          <TextField
+            autoComplete="off"
+            onKeyDown={handleKeyDown}
+            value={msg}
+            onChange={(e) => {
+              setMsg(e.currentTarget.value);
+            }}
+            id="filled-basic1"
+            placeholder="Write Message ..."
+            variant="filled"
+            sx={{
+              position: "fixed",
+              width: {
+                xs: "100%",
+                sm: "100%",
+                md: "22rem",
+                xl: "22rem",
+              },
+              bottom: "2rem",
+              right: "0px",
+              zIndex: 1,
+            }}
+            InputProps={{
+              style: { borderRadius: "100px", margin: "0px 15px" },
+              disableUnderline: true,
+              endAdornment: (
+                <InputAdornment
+                  sx={{
+                    marginTop: "0px !important",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  position="start"
                 >
-                  <Send />
-                </IconButton>
-              </InputAdornment>
-            ),
-            startAdornment: (
-              <InputAdornment
-                sx={{
-                  marginTop: "0px !important",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                position="start"
-              >
-                <Avatar
-                  variant="circular"
-                  src={me.profilePicture}
-                  sx={{ width: "35px", height: "35px" }}
-                />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </>
-      {/* )}{" "} */}
+                  <IconButton
+                    disabled={msg.length >= 1 ? false : true}
+                    onClick={sendMessage}
+                    sx={{ padding: "0px" }}
+                  >
+                    <Send />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              startAdornment: (
+                <InputAdornment
+                  sx={{
+                    marginTop: "0px !important",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  position="start"
+                >
+                  <Avatar
+                    variant="circular"
+                    src={me.profilePicture}
+                    sx={{ width: "35px", height: "35px" }}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

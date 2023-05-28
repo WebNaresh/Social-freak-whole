@@ -1,7 +1,6 @@
 import {
   Stack,
   Paper,
-  Skeleton,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -14,6 +13,7 @@ import UseContext from "../../State/UseState/UseContext";
 import Chat from "../Chat/Chat";
 import MainScroll from "../Main/MainScroll";
 import Profile from "../Profile/Profile";
+import Skeleton from "./SkeletonCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ExpandMore } from "@mui/icons-material";
 
@@ -65,7 +65,7 @@ const Home = () => {
       <Stack
         sx={{
           boxSizing: "border-box",
-          padding: "10px",
+          margin: "10px 0",
           width: {
             xs: "100vw",
             sm: "100vw",
@@ -87,7 +87,11 @@ const Home = () => {
           next={fetchMoreData}
           hasMore={true}
           height={"90vh"}
-          loader={<h4>Loading...</h4>}
+          style={{
+            padding: "10px",
+            boxSizing: "border-box",
+          }}
+          loader={<Skeleton />}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>

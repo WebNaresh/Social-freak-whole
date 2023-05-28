@@ -75,8 +75,6 @@ export default function TabPanel1() {
   const { utils, setUtils, me, setChats, tabData, socket, userId, chat } =
     useContext(UseContext);
 
- 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -89,7 +87,6 @@ export default function TabPanel1() {
       color: "white",
     },
   }));
-
 
   return (
     <Box
@@ -138,6 +135,16 @@ export default function TabPanel1() {
             {...a11yProps(0)}
           />
           <Tab
+            onClick={() => {
+              setUtils((utils) => ({
+                ...utils,
+                cuurentUserIdForMsg: null,
+                chatSpinner: false,
+              }));
+              userId.current = null;
+              setChats([]);
+              chat.current = [];
+            }}
             // disabled={me.userSuggestion?.length === 0 ? true : false}
             label={
               <StyledBadge
@@ -151,6 +158,16 @@ export default function TabPanel1() {
             {...a11yProps(1)}
           />
           <Tab
+            onClick={() => {
+              setUtils((utils) => ({
+                ...utils,
+                cuurentUserIdForMsg: null,
+                chatSpinner: false,
+              }));
+              userId.current = null;
+              setChats([]);
+              chat.current = [];
+            }}
             // disabled={me.followers?.length === 0 ? true : false}
             label={
               <StyledBadge badgeContent={tabData.tab3.length} color="error">
@@ -202,7 +219,6 @@ export default function TabPanel1() {
             ""
           )}
           <Tab1 />
-         
         </TabPanel>
       </Stack>
       <TabPanel

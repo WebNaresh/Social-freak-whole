@@ -80,8 +80,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopNav() {
-  const { me, setOpen, open, data, setData, utils, removeCookie, setMe } =
-    useContext(UseContext);
+  const {
+    me,
+    setOpen,
+    open,
+    data,
+    setData,
+    utils,
+    removeCookie,
+    setMe,
+    setUtils,
+    userId,
+    setChats,
+    chat,
+  } = useContext(UseContext);
   const { handleLoader } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -90,6 +102,14 @@ export default function TopNav() {
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+    setUtils((utils) => ({
+      ...utils,
+      cuurentUserIdForMsg: null,
+      chatSpinner: false,
+    }));
+    userId.current = null;
+    setChats([]);
+    chat.current = [];
   };
 
   // const handleMobileMenuClose = () => {
