@@ -5,6 +5,7 @@ import {
   Typography,
   IconButton,
   Modal,
+  Stack,
 } from "@mui/material";
 import {
   Cake,
@@ -12,10 +13,9 @@ import {
   DownhillSkiing,
   Edit,
   Favorite,
-  HailTwoTone,
   LocationOn,
   School,
-  SelfImprovement,
+  SentimentSatisfiedAlt,
   SmsFailed,
   Tag,
   Work,
@@ -28,15 +28,15 @@ import {
 import UpdateProfileInfo from "./Update/UpdateProfileInfo";
 import { useContext } from "react";
 import UseContext from "../../../State/UseState/UseContext";
+import Timestamp from "react-timestamp";
 
 export default function ProfileInfo({ me }) {
   const { setOpen, open } = useContext(UseContext);
   return (
     <Paper sx={{ marginY: 2 }}>
-      <Typography
+      <Stack
+        direction={"row"}
         sx={{ padding: "10px 5px", display: "flex", alignItems: "center" }}
-        gutterBottom
-        variant="h7"
         component="div"
       >
         <SmsFailed sx={{ marginX: 1 }} fontSize="small" /> Profile Info
@@ -52,28 +52,52 @@ export default function ProfileInfo({ me }) {
         >
           <Edit fontSize="small" />
         </IconButton>
-      </Typography>
-      <Typography
+      </Stack>
+      <Stack
         display={"flex"}
         flexDirection={"column"}
-        margin={2}
-        variant="subtitle2"
+        sx={{
+          margin: 2,
+        }}
         color="gray"
       >
         {" "}
-        <Typography variant="subtitle2" color={"black"} display={"flex"}>
-          <Work color="disabled" fontSize="small" /> &nbsp; &nbsp;{" "}
+        <Stack
+          direction={"row"}
+          variant="subtitle2"
+          color={"black"}
+          margin={"2px 0px"}
+          display={"flex"}
+        >
+          <SentimentSatisfiedAlt color="disabled" fontSize="small" /> &nbsp;
+          &nbsp;{" "}
           <Typography variant="subtitle2" color="gray">
-            <Typewriter
-              options={{
-                strings: me.descriptionHighlight,
-                autoStart: true,
-                loop: true,
-              }}
-            />
+            {me.nickName}
           </Typography>{" "}
-        </Typography>
-        <Typography
+        </Stack>
+        <Stack
+          direction={"row"}
+          variant="subtitle2"
+          color={"black"}
+          display={"flex"}
+        >
+          <Work color="disabled" fontSize="small" /> &nbsp; &nbsp;{" "}
+          <Stack variant="subtitle2" color="gray">
+            {me.descriptionHighLight === null ? (
+              ""
+            ) : (
+              <Typewriter
+                options={{
+                  strings: me.descriptionHighLight,
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            )}
+          </Stack>{" "}
+        </Stack>
+        <Stack
+          direction={"row"}
           variant="subtitle2"
           color={"black"}
           margin={"2px 0px"}
@@ -83,8 +107,9 @@ export default function ProfileInfo({ me }) {
           <Typography variant="subtitle2" color="gray">
             {me.collegeName}
           </Typography>{" "}
-        </Typography>
-        <Typography
+        </Stack>
+        <Stack
+          direction={"row"}
           variant="subtitle2"
           color={"black"}
           margin={"2px 0px"}
@@ -94,8 +119,9 @@ export default function ProfileInfo({ me }) {
           <Typography variant="subtitle2" color="gray">
             {me.location}
           </Typography>{" "}
-        </Typography>
-        <Typography
+        </Stack>
+        <Stack
+          direction={"row"}
           variant="subtitle2"
           color={"black"}
           margin={"2px 0px"}
@@ -103,7 +129,7 @@ export default function ProfileInfo({ me }) {
         >
           {me.relationShip === "single" ? (
             <>
-              <SelfImprovement color="disabled" fontSize="small" />
+              <Favorite color="disabled" fontSize="small" />
               &nbsp; &nbsp;
               <Typography variant="subtitle2" color="gray">
                 Single
@@ -119,15 +145,16 @@ export default function ProfileInfo({ me }) {
             </>
           ) : (
             <>
-              <HailTwoTone color="disabled" fontSize="small" />
+              <Favorite color="disabled" fontSize="small" />
               &nbsp; &nbsp;
               <Typography variant="subtitle2" color="gray">
                 Secret SuperStar
               </Typography>
             </>
           )}
-        </Typography>
-        <Typography
+        </Stack>
+        <Stack
+          direction={"row"}
           variant="subtitle2"
           color={"black"}
           margin={"2px 0px"}
@@ -137,54 +164,39 @@ export default function ProfileInfo({ me }) {
           <Typography variant="subtitle2" color="gray">
             {me.hobby}
           </Typography>{" "}
-        </Typography>
-        <Typography
+        </Stack>
+        <Stack
+          direction={"row"}
           margin={"2px 0px"}
-          variant="subtitle2"
           color={"black"}
           display={"flex"}
         >
           <Cake color="disabled" fontSize="small" /> &nbsp; &nbsp;{" "}
           <Typography variant="subtitle2" color="gray">
-            {me.birthDate}
+            <Timestamp date={me.birthDate} />
+            {/* {me.birthDate} */}
           </Typography>{" "}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          margin={"2px 0px"}
-          color={"black"}
-          display={"flex"}
-        >
+        </Stack>
+        <Stack margin={"2px 0px"} color={"black"} display={"flex"}>
           <ConnectWithoutContact color="disabled" fontSize="small" /> &nbsp;
           &nbsp;{" "}
-          <Typography variant="subtitle2" color="#3999e7">
-            {me.taggedPeople.map((e) => {
-              return (
-                <MuiLink href="#" underline="none" color={"#3999e7"}>
-                  @{e}
-                </MuiLink>
-              );
-            })}
-          </Typography>{" "}
-        </Typography>
-        {/* <Typography
-          variant="subtitle2"
-          color={"gray"}
-          display={"flex"}
-          flexDirection={"column"}
-        >
-          <TextareaAutosize
-            value={auto}
-            onChange={(e) => setAuto(e.target.value)}
-            maxRows={4}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setAuto(e.target.value + "\n");
-                console.log(auto);
-              }
-            }}
-          />
-        </Typography> */}
+          <Stack variant="subtitle2" color="#3999e7">
+            {me.taggedPeople !== null
+              ? me.taggedPeople.map((e, index) => {
+                  return (
+                    <MuiLink
+                      key={index}
+                      href="#"
+                      underline="none"
+                      color={"#3999e7"}
+                    >
+                      @{e}
+                    </MuiLink>
+                  );
+                })
+              : ""}
+          </Stack>{" "}
+        </Stack>
         <span
           style={{
             whiteSpace: "pre-line",
@@ -196,7 +208,8 @@ export default function ProfileInfo({ me }) {
             fontSize: "12px",
           }}
         ></span>
-        <Typography
+        <Stack
+          direction={"row"}
           variant="subtitle2"
           margin={"2px 0px"}
           color={"black"}
@@ -208,17 +221,19 @@ export default function ProfileInfo({ me }) {
             fontSize="small"
           />{" "}
           &nbsp; &nbsp;{" "}
-          <Typography variant="subtitle2" color="#3999e7">
-            {me.hashtags.map((e) => {
-              return (
-                <MuiLink href="#" underline="none" color={"#3999e7"}>
-                  #{e}
-                </MuiLink>
-              );
-            })}
-          </Typography>{" "}
-        </Typography>
-      </Typography>
+          <Stack variant="subtitle2" color="#3999e7">
+            {me.hashTags !== null
+              ? me.hashTags.map((e, index) => {
+                  return (
+                    <a key={index} href="/" underline="none" color={"#3999e7"}>
+                      #{e}
+                    </a>
+                  );
+                })
+              : ""}
+          </Stack>{" "}
+        </Stack>
+      </Stack>
       <Modal
         open={open.profileInfo}
         onClose={() => handleCloseInfo(setOpen, open)}

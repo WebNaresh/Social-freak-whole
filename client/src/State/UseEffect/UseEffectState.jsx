@@ -1,18 +1,126 @@
 import React, { useEffect } from "react";
 import { useContext } from "react";
+import LoginContext from "../Login/LoginContext";
 import UseContext from "../UseState/UseContext";
 import UseEffectContext from "./UseEffectContext";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 export const UseEffectState = (props) => {
-  const { setProgress, location } = useContext(UseContext);
+  const {
+    setProgress,
+    location,
+    me,
+    data,
+    setData,
+    stream,
+    removeCookie,
+    cookies,
+    setCookie,
+    setMe,
+    socket,
+  } = useContext(UseContext);
+  const { getPosts, getFriends } = useContext(LoginContext);
+  const redirect = useNavigate();
   const state = { name: "harry", class: "5b" };
   useEffect(() => {
-    // console.log(location);
     setProgress(10);
     setTimeout(() => {
       setProgress(100);
     }, 1000);
+
+    if (me._id === null) {
+      console.log(cookies["login"]);
+
+      if (cookies["login"]) {
+        jwt_decode(cookies["login"]);
+        const data = {
+          id: jwt_decode(cookies["login"]).user,
+        };
+        console.log(`🚀 ~ data:`, data);
+        const config = { headers: { "Content-Type": "application/json" } };
+        axios
+          .post(process.env.REACT_APP_REGISTER_WITH_ID, data, config)
+          .catch((errors) => {
+            redirect("/login");
+          })
+          .then((response) => {
+            function addDays(date, days) {
+              const result = new Date(date);
+              result.setDate(result.getDate() + days);
+              return result;
+            }
+            const expirationDate = addDays(new Date(), 30);
+            setCookie("login", response.data.token, {
+              expires: expirationDate,
+            });
+            setMe({
+              ...me,
+              backgroundPicture: response.data.user.backgroundPicture,
+              birthDate: response.data.user.birthDate,
+              collegeName: response.data.user.collegeName,
+              descriptionHighLight: response.data.user.descriptionHighLight,
+              followers: response.data.user.followers,
+              following: response.data.user.following,
+              hashTags: response.data.user.hashTags,
+              hobby: response.data.user.hobby,
+              memories: response.data.user.memories,
+              post: response.data.user.post,
+              profilePicture: response.data.user.profilePicture,
+              relationShip: response.data.user.relationShip,
+              taggedPeople: response.data.user.taggedPeople,
+              userEmail: response.data.user.userEmail,
+              userName: response.data.user.userName,
+              _id: response.data.user._id,
+              location: response.data.user.location,
+              nickName: response.data.user.nickName,
+              friends: response.data.user.friends,
+              userSuggestion: response.data.user.userSuggestion,
+            });
+            socket.current.emit("add-user", response.data.user._id);
+          });
+        redirect("/");
+      } else {
+        redirect("/login");
+      }
+    }
+
     // eslint-disable-next-line
-  }, [location]);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (me._id === null) {
+    } else {
+      getPosts("firstTime");
+      getFriends();
+    }
+  }, [me._id]);
+  // useEffect(() => {
+  //   if (me._id === null) {
+  //     redirect("/login");
+  //   } else {
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    if (
+      data.uploadedImages.length >= 1 &&
+      data.uploadedImages.length === data.files.length
+    ) {
+      setData({
+        ...data,
+        buttonDisable: false,
+        handleuploadIcon: false,
+      });
+    } else {
+      setData({
+        ...data,
+        buttonDisable: true,
+      });
+    }
+    // eslint-disable-next-line
+  }, [data.uploadedImages.length]);
+
   return (
     <UseEffectContext.Provider value={{ state }}>
       {props.children}

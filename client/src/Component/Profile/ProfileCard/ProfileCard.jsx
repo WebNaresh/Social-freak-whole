@@ -21,22 +21,34 @@ import {
 } from "../../../State/Function/Fuction";
 
 export default function ProfileCard() {
-  const { me, open, setOpen } = useContext(UseContext);
-
+  const { me, open, setOpen, setFormData, formData } = useContext(UseContext);
+  React.useEffect(() => {}, []);
   return (
     <>
       <Card sx={{ marginBottom: 2 }}>
         <CardMedia
+          children={null}
           sx={{ height: 100 }}
-          image={me.backgroundPicture}
+          image={me.backgroundPicture !== null ? me.backgroundPicture : ""}
+          src={me.backgroundPicture !== null ? me.backgroundPicture : ""}
           title={`${me.userName} background pic`}
-          style={{ backgroundPosition: "inherit" }}
+          style={{ backgroundPosition: "center", backgroundColor: "GrayText" }}
+          component={"div"}
         />
         <IconButton
           aria-label="Edit Profile"
           style={{ borderRadius: "10px" }}
           onClick={() => {
             handleOpenCard(setOpen, open);
+            setFormData({
+              ...formData,
+              profileLink: me.profilePicture,
+              backgroundLink: me.backgroundPicture,
+              userName: me.userName,
+              array: me.descriptionHighLight,
+              selectedBackgroundPic: null,
+              selectedProfilePic: null,
+            });
           }}
           sx={{
             margin: "auto",
@@ -52,9 +64,9 @@ export default function ProfileCard() {
           sx={{
             width: 50,
             height: 50,
-            margin: "auto",
+            margin: "0px 20px",
             position: "relative",
-            top: -50,
+            top: -70,
             boxShadow: "2px 7px 23px #605c5c",
           }}
           variant="circular"
@@ -70,22 +82,26 @@ export default function ProfileCard() {
             alignItems: "center",
             flexDirection: "column",
             position: "relative",
-            bottom: "10px",
+            bottom: "60px",
             padding: "0px",
           }}
         >
           <Typography gutterBottom variant="h7" component="div">
             {me.userName}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <Typewriter
-              options={{
-                strings: me.descriptionHighlight,
-                autoStart: true,
-                loop: true,
-              }}
-            />
-          </Typography>
+          <Stack variant="body2" color="text.secondary">
+            {me.descriptionHighLight === null ? (
+              ""
+            ) : (
+              <Typewriter
+                options={{
+                  strings: me.descriptionHighLight,
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            )}
+          </Stack>
         </CardContent>
         <CardActions
           sx={{
@@ -103,7 +119,7 @@ export default function ProfileCard() {
               variant="body2"
               component="div"
             >
-              {me.followers}
+              {me.followers?.length}
             </Typography>
             <Typography
               fontSize="0.7rem"
@@ -127,7 +143,7 @@ export default function ProfileCard() {
               variant="body2"
               component="div"
             >
-              {me.following}
+              {me.following?.length}
             </Typography>
             <Typography
               margin={"auto"}
@@ -145,7 +161,7 @@ export default function ProfileCard() {
               variant="body2"
               component="div"
             >
-              {me.postCount}
+              {me.post?.length}
             </Typography>
             <Typography
               margin={"auto"}
@@ -163,6 +179,7 @@ export default function ProfileCard() {
         onClose={() => handleCloseCard(setOpen, open)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{ zIndex: 2 }}
       >
         <UpdateProfileCard />
       </Modal>

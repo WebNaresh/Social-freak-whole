@@ -1,29 +1,26 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Message = new mongoose.Schema({
-    message: {
-        type: String,
-        required: [true, 'Please Enter Your message'],
-    },
-    from: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, 'Please Enter Your from'],
-        ref: "User"
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Message = new mongoose.Schema(
+  {
+    message: [{ type: String }],
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "Please Enter Your from"],
+      ref: "User",
     },
     reciever: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, 'Please Enter Your reciever'],
-        ref: "User"
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "Please Enter Your reciever"],
+      ref: "User",
     },
     time: {
-        type: String,
-        default: ""
-    }
-
-},
-    { timestamps: true },
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  { timestamps: true }
 );
 // Message.pre("save", async function (next) {
 //     var dt = new Date();
@@ -34,7 +31,6 @@ const Message = new mongoose.Schema({
 //     var finalTime = +hours + ':' + minutes + ' ' + AmOrPm;
 //     this.time = `${finalTime}`;
 // });
-Message.pre("insertMany", async function (next, docs) {
-});
+Message.pre("insertMany", async function (next, docs) {});
 
-module.exports = mongoose.model('Message', Message);
+module.exports = mongoose.model("Message", Message);

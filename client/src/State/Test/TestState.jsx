@@ -4,6 +4,7 @@ import TestContext from "./TestContext";
 import UseContext from "../UseState/UseContext";
 export const TestState = (props) => {
   const { setAppAlert, setAppLoading } = useContext(UseContext);
+
   const handleAlert = (alert, type, msg) => {
     setAppAlert({
       alert: alert || false,
@@ -11,17 +12,21 @@ export const TestState = (props) => {
       msg: msg || "this is test message",
     });
   };
-  const handleLoader = (load, color) => {
+  const handleLoader = (load, color, time) => {
     setAppLoading({
       load: load || true,
       color: color || "#fff",
     });
-    setTimeout(() => {
-      setAppLoading({
-        load: false,
-      });
-    }, 2000);
+    setTimeout(
+      () => {
+        setAppLoading({
+          load: false,
+        });
+      },
+      time ? time : 2000
+    );
   };
+
   return (
     <TestContext.Provider value={{ handleAlert, handleLoader }}>
       {props.children}

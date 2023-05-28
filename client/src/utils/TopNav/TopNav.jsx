@@ -6,6 +6,7 @@ import {
   AddAPhotoOutlined,
   Chat,
   Login,
+  Logout,
   Search as SearchIcon,
 } from "@mui/icons-material/";
 
@@ -25,7 +26,18 @@ import {
 import Typewriter from "typewriter-effect";
 import { useContext } from "react";
 import UseContext from "../../State/UseState/UseContext";
+import TestContext from "../../State/Test/TestContext";
 import { Link } from "react-router-dom";
+import CreateModal from "../../Component/Main/createModal/CreateModal";
+import {
+  handleCloseCreate,
+  handleOpenCreate,
+} from "../../State/Function/Fuction";
+import { Modal } from "@material-ui/core";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,7 +80,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopNav() {
-  const { me } = useContext(UseContext);
+  const { me, setOpen, open, data, setData, utils, removeCookie, setMe } =
+    useContext(UseContext);
+  const { handleLoader } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -81,6 +95,35 @@ export default function TopNav() {
   // const handleMobileMenuClose = () => {
   //   setMobileMoreAnchorEl(null);
   // };
+  const removeCookieFromBack = () => {
+    handleLoader(true, "#E36049", 4000);
+    removeCookie("login", { expires: new Date(0) });
+    console.log("worked");
+    setTimeout(() => {
+      setMe({
+        backgroundPicture: null,
+        birthDate: null,
+        collegeName: null,
+        descriptionHighLight: null,
+        followers: [],
+        following: [],
+        hashTags: null,
+        hobby: null,
+        memories: null,
+        post: null,
+        profilePicture: null,
+        relationShip: null,
+        taggedPeople: null,
+        userEmail: null,
+        userName: null,
+        location: null,
+        nickName: null,
+        friends: null,
+        userSuggestion: [],
+        _id: null,
+      });
+    }, 3000);
+  };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -104,32 +147,70 @@ export default function TopNav() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
-        {" "}
-        <Avatar
-          sx={{ width: 30, height: 30, marginRight: 1 }}
-          variant="circular"
-          src={me.profilePicture}
-          alt="wait"
-        />{" "}
-        <Link to={"/profile"}>Profile</Link>{" "}
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <Chat sx={{ marginX: 1 }} fontSize="small" />
-        <Link to={"/chat"}>Chat</Link>{" "}
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <Login sx={{ marginX: 1 }} fontSize="small"></Login>{" "}
-        <Link to={"/login"}>Login</Link>{" "}
-      </MenuItem>
+      <Link to={"/profile"}>
+        <MenuItem onClick={handleMenuClose}>
+          {" "}
+          <Avatar
+            sx={{ width: 30, height: 30, marginRight: 1 }}
+            variant="circular"
+            src={me.profilePicture}
+            alt="wait"
+          />{" "}
+          Setting{" "}
+        </MenuItem>
+      </Link>
+      <Link to={"/messages"}>
+        <MenuItem onClick={handleMenuClose}>
+          <Chat sx={{ marginX: 1 }} fontSize="small" />
+          Chat{" "}
+        </MenuItem>
+      </Link>
+
+      {me?._id === null || undefined ? (
+        <Link to={"/login"}>
+          {" "}
+          <MenuItem onClick={handleMenuClose}>
+            <Login sx={{ marginX: 1 }} fontSize="small"></Login> Login
+          </MenuItem>
+        </Link>
+      ) : (
+        <Link onClick={removeCookieFromBack} to={"/login"}>
+          <MenuItem onClick={handleMenuClose}>
+            {" "}
+            <Logout sx={{ marginX: 1 }} fontSize="small"></Logout> Logout
+          </MenuItem>
+        </Link>
+      )}
     </Menu>
   );
 
   // const mobileMenuId = "primary-search-account-menu-mobile";
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box
+      sx={{
+        flexGrow: 1,
+        height: {
+          sm: "8vh",
+          md: "9vh",
+          xs: "8vh",
+          lg: "9vh",
+          xl: "9vh",
+        },
+      }}
+    >
+      <AppBar
+        sx={{
+          height: {
+            sm: "8vh",
+            md: "9vh",
+            xs: "8vh",
+            lg: "9vh",
+            xl: "9vh",
+          },
+        }}
+        position="fixed"
+      >
         <Toolbar>
           <Typography variant="h6" noWrap component="div" sx={{ width: 120 }}>
             <Typewriter
@@ -152,27 +233,50 @@ export default function TopNav() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="
+Search
+"
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { md: "flex" } }}>
+          <Box sx={{ display: "flex" }}>
             <Button
               sx={{
                 borderRadius: 5,
                 paddingX: 4,
                 height: 35,
                 margin: "auto",
-                display: { xs: "none", md: "flex" },
+                display: { xs: "flex", md: "flex" },
               }}
               variant="contained"
               color="secondary"
               startIcon={<AddAPhotoOutlined />}
+              onClick={() => {
+                handleOpenCreate(setOpen, open);
+                setData({
+                  ...data,
+                  title: "Add an Title",
+                  hashtagArray: ["example"],
+                  taggedPeopleArray: ["example"],
+                  uploadedImages: [],
+                  imageArray: [],
+                  files: null,
+                  buttonDisable: true,
+                });
+              }}
             >
               {" "}
               Create
             </Button>
+            <Modal
+              open={open.createModal}
+              onClose={() => handleCloseCreate(setOpen, open)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <CreateModal />
+            </Modal>
 
             <IconButton
               size="large"
@@ -183,7 +287,10 @@ export default function TopNav() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <Badge badgeContent={<Add fontSize="0.9rem" />} color="error">
+              <Badge
+                badgeContent={utils.messageNotification.length}
+                color="error"
+              >
                 <Avatar variant="circular" src={me.profilePicture} alt="wait" />
               </Badge>
             </IconButton>

@@ -2,30 +2,56 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Tab1 from "./Tab1";
 import Tab2 from "./Tab2";
 import Tab3 from "./Tab3";
+import UseContext from "../../../State/UseState/UseContext";
+import { useContext } from "react";
+import { Stack } from "@mui/system";
+import IconButton from "@mui/material/IconButton";
+import { ArrowBackIosNew, Send } from "@mui/icons-material";
+import {
+  Avatar,
+  Badge,
+  InputAdornment,
+  TextField,
+  styled,
+} from "@mui/material";
+import { useState } from "react";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+  const { utils, oneRef } = useContext(UseContext);
 
   return (
     <div
       role="tabpanel"
-      style={{
-        overflow: "auto",
-      }}
+      style={{ height: "100%" }}
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      // style={{ overflowY: "scroll" }}
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: [0, 2] }}>
-          <Typography>{children}</Typography>
+        <Box sx={{ p: "7px 10px 0px 10px", height: "100%" }}>
+          <Stack sx={{ height: "100%" }}>{children}</Stack>
         </Box>
+      )}
+      {utils.chatSpinner === true ? (
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      ) : (
+        ""
       )}
     </div>
   );
@@ -46,16 +72,31 @@ function a11yProps(index) {
 
 export default function TabPanel1() {
   const [value, setValue] = React.useState(0);
+  const { utils, setUtils, me, setChats, tabData, socket, userId, chat } =
+    useContext(UseContext);
+
+ 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      right: -6,
+      top: -6,
+      padding: "0 4px",
+      background: "#d32f2f",
+      color: "white",
+    },
+  }));
+
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "99.8%",
+        height: "100%",
+        position: "relative",
       }}
     >
       <Box
@@ -63,31 +104,110 @@ export default function TabPanel1() {
           borderColor: "divider",
           display: "flex",
           justifyContent: "center",
+          height: "8%",
         }}
       >
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          onFocus={() => setValue(0)}
         >
-          <Tab label="Messages" sx={{ fontSize: "12px" }} {...a11yProps(0)} />
-          <Tab label="Request(2)" sx={{ fontSize: "12px" }} {...a11yProps(1)} />
-          <Tab label="Recent" sx={{ fontSize: "12px" }} {...a11yProps(2)} />
+          <Tab
+            onClick={() => {
+              setUtils((utils) => ({
+                ...utils,
+                cuurentUserIdForMsg: null,
+                chatSpinner: false,
+              }));
+              userId.current = null;
+              setChats([]);
+              chat.current = [];
+            }}
+            label={
+              <>
+                <StyledBadge
+                  badgeContent={utils.messageNotification.length}
+                  color="error"
+                >
+                  Messages
+                </StyledBadge>
+              </>
+            }
+            sx={{ fontSize: "12px" }}
+            {...a11yProps(0)}
+          />
+          <Tab
+            // disabled={me.userSuggestion?.length === 0 ? true : false}
+            label={
+              <StyledBadge
+                badgeContent={me.userSuggestion?.length}
+                color="error"
+              >
+                Suggestion
+              </StyledBadge>
+            }
+            sx={{ fontSize: "12px" }}
+            {...a11yProps(1)}
+          />
+          <Tab
+            // disabled={me.followers?.length === 0 ? true : false}
+            label={
+              <StyledBadge badgeContent={tabData.tab3.length} color="error">
+                Request
+              </StyledBadge>
+            }
+            sx={{ fontSize: "12px" }}
+            {...a11yProps(2)}
+          />
         </Tabs>
       </Box>
-      <TabPanel
+      <Stack
+        // ref={oneRef}
         style={{
-          height: "80%",
-          overflowY: "scroll",
+          height: "92%",
+          position: "absolute",
+          width: "100%",
         }}
-        value={value}
-        index={0}
       >
-        <Tab1 />
-      </TabPanel>
+        <TabPanel value={value} index={0}>
+          {utils.cuurentUserIdForMsg !== null ? (
+            <Stack
+              style={{
+                width: "100%",
+                height: "40px",
+                position: "fixed",
+              }}
+            >
+              <IconButton
+                style={{
+                  width: "min-content",
+                }}
+                aria-label="iconClick"
+                onClick={() => {
+                  setUtils((utils) => ({
+                    ...utils,
+                    cuurentUserIdForMsg: null,
+                    chatSpinner: false,
+                  }));
+                  userId.current = null;
+                  setChats([]);
+                  chat.current = [];
+                }}
+              >
+                <ArrowBackIosNew />
+              </IconButton>
+            </Stack>
+          ) : (
+            ""
+          )}
+          <Tab1 />
+         
+        </TabPanel>
+      </Stack>
       <TabPanel
         style={{
-          height: "80%",
+          height: "90%",
           overflowY: "scroll",
         }}
         value={value}
@@ -97,7 +217,7 @@ export default function TabPanel1() {
       </TabPanel>
       <TabPanel
         style={{
-          height: "80%",
+          height: "90%",
           overflowY: "scroll",
         }}
         value={value}

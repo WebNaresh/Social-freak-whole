@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   Typography,
   Card,
-  CardActions,
   CardContent,
   CardMedia,
   Avatar,
@@ -12,201 +11,291 @@ import {
   Badge,
   TextField,
   Button,
+  Autocomplete,
+  Chip,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Edit, Upload } from "@mui/icons-material";
 import { useContext } from "react";
 import UseContext from "../../../../State/UseState/UseContext";
-import { handleOpenCard } from "../../../../State/Function/Fuction";
+import LoginContext from "../../../../State/Login/LoginContext";
 
-const UpdateProfileCard = () => {
-  const { me, open, setOpen } = useContext(UseContext);
+const UpdateProfileCard = React.forwardRef(() => {
+  const { me, formData, setFormData } = useContext(UseContext);
+  const { updateDataFromBackend, uploadToCloudinary } =
+    useContext(LoginContext);
+  const top100Films = [];
+  const imageref = React.useRef();
+  const imageref2 = React.useRef();
+
+  const handlepathWay = (e) => {
+    let url = URL.createObjectURL(e.target.files[0]);
+    setFormData({
+      ...formData,
+      profileLink: url,
+      selectedProfilePic: e.target.files[0],
+    });
+  };
+
+  const handlepathWay2 = (e) => {
+    let url = URL.createObjectURL(e.target.files[0]);
+    setFormData({
+      ...formData,
+      backgroundLink: url,
+      selectedBackgroundPic: e.target.files[0],
+    });
+  };
+
+  // };
   return (
     <div>
-      <Paper
+      <Card
         sx={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "80vw",
-          height: "80vh",
+          width: "25rem",
+          height: "30rem",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          overflow: "auto",
         }}
       >
-        <Card sx={{ marginBottom: 2 }}>
-          <CardMedia
-            sx={{ height: "20vh" }}
-            image={me.backgroundPicture}
-            title={`${me.userName} background pic`}
-            style={{ backgroundPosition: "inherit" }}
-          />
+        <CardMedia
+          sx={{ height: "8rem" }}
+          image={formData.backgroundLink}
+          title={`${me.userName} background pic`}
+          style={{
+            backgroundPosition: "center",
+            backgroundColor: "GrayText",
+          }}
+        />
+        <Paper
+          variant="outlined"
+          sx={{
+            margin: "auto",
+            position: "relative",
+            left: "40%",
+            top: "-7rem",
+            display: "flex",
+            width: "fit-content",
+            backgroundColor: "primary",
+          }}
+        >
           <IconButton
             aria-label="Edit Profile"
             style={{ borderRadius: "10px" }}
-            onClick={() => handleOpenCard(setOpen, open)}
-            sx={{
-              margin: "auto",
-              position: "relative",
-              left: "95%",
-              top: "-20vh",
-            }}
+            onClick={() => imageref2.current.click()}
             color={"primary"}
           >
-            <Edit fontSize="1px" />
+            {" "}
+            <Edit color="action" fontSize="1px" />
           </IconButton>
-          <Badge
-            color="primary"
-            badgeContent={<Edit fontSize="large" />}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            sx={{
-              position: "absolute",
-              left: "48%",
-              transform: "translate(-50%, -50%)",
-              height: "200px",
-              span: {
-                height: "50px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              },
-            }}
-          >
-            <Avatar
-              sx={{
-                width: "20vw",
-                height: "20vh",
-                margin: "auto",
-                position: "relative",
-                left: "15px",
-                top: "-15px",
-                boxShadow: "2px 7px 23px #605c5c",
-              }}
-              variant="circular"
-              src={me.profilePicture}
-              style={{ backgroundPosition: "inherit" }}
-              alt="wait"
-              title={`${me.userName} profile pic`}
-            />{" "}
-          </Badge>
-          <CardContent
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              position: "relative",
-              bottom: "10px",
-              padding: "0px",
-              marginTop: "8rem",
-            }}
-          >
-            <Paper variant="outline">
-              <Stack flexDirection={"column"}>
-                <TextField
-                  variant="filled"
-                  id="userName"
-                  label="UserName"
-                  sx={{ margin: "10px 10px" }}
-                />
-                <TextField
-                  variant="filled"
-                  id="userName"
-                  label="Hignlight     1"
-                  sx={{ margin: "10px 10px" }}
-                />
-                <TextField
-                  variant="filled"
-                  id="userName"
-                  label="Hignlight     2"
-                  sx={{ margin: "10px 10px" }}
-                />
-                <TextField
-                  variant="filled"
-                  id="userName"
-                  label="Hignlight     3"
-                  sx={{ margin: "10px 10px" }}
-                />
-                <Button variant="contained" color="primary">
-                  Submit
-                </Button>
-              </Stack>
-            </Paper>
-          </CardContent>
-          <CardActions
-            sx={{
-              borderBottom: "1px solid #e0e0e0",
-              borderTop: "1px solid #e0e0e0",
-              margin: "10px 10px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Stack>
-              <Typography
-                fontSize="0.7rem"
-                margin={"auto"}
-                variant="body2"
-                component="div"
-              >
-                {me.followers}
-              </Typography>
-              <Typography
-                fontSize="0.7rem"
-                margin={"auto"}
-                variant="subtitle2"
-                color="text.secondary"
-              >
-                Follower
-              </Typography>
-            </Stack>
-            <Stack
-              sx={{
-                borderLeft: "1px solid #e0e0e0",
-                borderRight: "1px solid #e0e0e0",
-                padding: "8px 12px",
-              }}
+          {formData.selectedBackgroundPic !== null ? (
+            <IconButton
+              aria-label="Edit Profile"
+              style={{ borderRadius: "10px" }}
+              onClick={() =>
+                uploadToCloudinary(formData.selectedBackgroundPic, "background")
+              }
+              color={"primary"}
+              className={"rotate360"}
             >
-              <Typography
-                fontSize="0.7rem"
-                margin={"auto"}
-                variant="body2"
-                component="div"
+              {" "}
+              <Upload color="action" fontSize="1px" />
+            </IconButton>
+          ) : (
+            ""
+          )}
+        </Paper>
+
+        <Badge
+          badgeContent={
+            <>
+              <Paper
+                variant="outlined"
+                sx={{
+                  margin: "auto",
+                  position: "relative",
+                  display: "flex",
+                  backgroundColor: "primary",
+                }}
               >
-                {me.following}
-              </Typography>
-              <Typography
-                margin={"auto"}
-                fontSize="0.7rem"
-                variant="body2"
-                color="text.secondary"
+                <IconButton
+                  aria-label="Edit Profile"
+                  style={{ borderRadius: "10px" }}
+                  onClick={() => imageref.current.click()}
+                  color={"primary"}
+                >
+                  {" "}
+                  <Edit
+                    color="action"
+                    sx={{
+                      fontSize: "1.1875rem",
+                    }}
+                  />
+                </IconButton>
+                {formData.selectedProfilePic !== null ? (
+                  <IconButton
+                    aria-label="Edit Profile"
+                    style={{ borderRadius: "10px" }}
+                    onClick={() =>
+                      uploadToCloudinary(formData.selectedProfilePic, "profile")
+                    }
+                    color={"primary"}
+                    className={"rotate360"}
+                  >
+                    {" "}
+                    <Upload
+                      color="action"
+                      sx={{
+                        fontSize: "1.1875rem",
+                      }}
+                    />
+                  </IconButton>
+                ) : (
+                  ""
+                )}
+              </Paper>
+            </>
+          }
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          sx={{
+            position: "absolute",
+            left: "15%",
+            transform: "translate(-50%, -100%)",
+            height: "100px",
+            background: "transprent",
+          }}
+        >
+          <input
+            type="file"
+            name="hello"
+            id="hello "
+            style={{ display: "none" }}
+            ref={imageref}
+            onChange={handlepathWay}
+            accept="image/png, image/jpeg"
+          />
+          <input
+            type="file"
+            name="hello"
+            id="hello "
+            style={{ display: "none" }}
+            ref={imageref2}
+            onChange={handlepathWay2}
+            accept="image/png, image/jpeg"
+          />
+          <Avatar
+            sx={{
+              width: "6rem",
+              height: "6rem",
+              margin: "auto",
+              position: "relative",
+              left: "15px",
+              top: "-15px",
+              boxShadow: "2px 7px 23px #605c5c",
+            }}
+            variant="circular"
+            src={formData.profileLink}
+            style={{ backgroundPosition: "inherit" }}
+            alt="wait"
+            title={`${me.userName} profile pic`}
+          />{" "}
+        </Badge>
+        <CardContent
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            position: "relative",
+            bottom: "10px",
+            padding: "0px",
+            marginTop: "1rem",
+          }}
+        >
+          <Paper variant="outline">
+            <Stack flexDirection={"column"}>
+              <TextField
+                variant="filled"
+                id="userName"
+                label="UserName"
+                sx={{ height: "4rem", width: "18rem" }}
+                value={formData.userName}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    userName: e.target.value,
+                  })
+                }
+              />
+              <Autocomplete
+                sx={{ height: "fit-content", width: "18rem" }}
+                multiple
+                limitTags={2}
+                defaultValue={formData.array}
+                id="tags-filled"
+                options={top100Films.map((option) => option.title)}
+                onChange={(event, newValue) => {
+                  setFormData({
+                    ...formData,
+                    array: newValue,
+                  });
+                }}
+                freeSolo
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      variant="outlined"
+                      label={option}
+                      {...getTagProps({ index })}
+                    />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="filled"
+                    label="Favourites"
+                    placeholder={"Favourites"}
+                  />
+                )}
+              />
+              {formData.array.length >= 3 ? (
+                <Typography
+                  variant="body2"
+                  textAlign={"center"}
+                  color="crimson"
+                >
+                  We Recomend Use 3 Tags Only
+                </Typography>
+              ) : (
+                <Typography variant="body2" textAlign={"center"} color="green">
+                  press enter on writing
+                </Typography>
+              )}
+              <Button
+                onClick={() => updateDataFromBackend()}
+                sx={{ margin: "1rem auto", width: "5rem" }}
+                variant="contained"
+                color="primary"
+                disabled={
+                  formData.selectedBackgroundPic === null &&
+                  formData.selectedProfilePic === null
+                    ? false
+                    : true
+                }
               >
-                Following
-              </Typography>
+                Submit
+              </Button>
             </Stack>
-            <Stack>
-              <Typography
-                fontSize="0.7rem"
-                margin={"auto"}
-                variant="body2"
-                component="div"
-              >
-                {me.postCount}
-              </Typography>
-              <Typography
-                margin={"auto"}
-                fontSize="0.7rem"
-                variant="body2"
-                color="text.secondary"
-              >
-                Post
-              </Typography>
-            </Stack>
-          </CardActions>
-        </Card>
-      </Paper>
+          </Paper>
+        </CardContent>
+      </Card>
     </div>
   );
-};
+});
 
 export default UpdateProfileCard;

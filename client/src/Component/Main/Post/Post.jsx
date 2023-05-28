@@ -10,141 +10,373 @@ import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Link, Stack } from "@mui/material";
-import { Comment } from "@mui/icons-material";
+import { Link, Stack, Chip } from "@mui/material";
+import { Comment, VisibilityOutlined } from "@mui/icons-material";
+import Carousel from "react-material-ui-carousel";
+import dayjs from "dayjs";
+import axios from "axios";
+import UseContext from "../../../State/UseState/UseContext";
+import { useEffect } from "react";
+import VisibilitySensor from "react-visibility-sensor";
+import { useState } from "react";
+import LoginContext from "../../../State/Login/LoginContext";
+import { useContext } from "react";
+import { handleOpenComment } from "../../../State/Function/Fuction";
 
 export default function Post({ data }) {
-  return (
-    <Card sx={{ maxWidth: 345, margin: "10px 0px" }}>
-      <CardHeader
-        avatar={<Avatar src={data.userImage} aria-label="recipe" />}
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+  const { me, open, setOpen, utils, setUtils } = React.useContext(UseContext);
+  const [like, setLike] = React.useState(false);
+  const [state, setstate] = useState(0);
+  const [state2, setState2] = useState(false);
+  const { requestToView } = useContext(LoginContext);
+  const handleLikeButton = (id, response) => {
+    const data1 = {
+      postId: id,
+      response,
+    };
+    const config = { headers: { "Content-Type": "application/json" } };
+    axios
+      .post(`${process.env.REACT_APP_LIKE_POST}${me._id}`, data1, config)
+      .catch((errors) => {
+        // setLike(false);
+      })
+      .then((response) => {
+        if (response.data.response === "like") {
+          setLike(true);
+          setstate(1);
+        } else if (response.data.response === "disLike") {
+          setLike(false);
+          setstate(-1);
         }
-        title={data.userName}
-        subheader={data.date}
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image={data.image[0]}
-        sx={{ objectFit: "contain" }}
-      />
-      <CardContent>
-        <Typography
-          flexDirection={"row"}
-          variant="body2"
-          color="text.secondary"
-          display={"flex"}
+      });
+  };
+
+  useEffect(() => {
+    if (data.likes.includes(me._id)) {
+      setLike(true);
+    }
+
+    // eslint-disable-next-line
+  }, []);
+  useEffect(() => {
+    if (data.views.includes(me._id) !== true) {
+      requestToView(data._id);
+    }
+
+    // eslint-disable-next-line
+  }, [state2 === true]);
+
+  return (
+    <>
+      <Card sx={{ maxWidth: "100%", margin: "10px 0px" }}>
+        <CardHeader
+          avatar={
+            <Avatar src={data.userId.profilePicture} aria-label="recipe" />
+          }
+          action={
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          }
+          title={data.userId.userName}
+          subheader={`${dayjs(data.createdAt).format("LLL")}    `}
+        />
+
+        <Carousel
+          sx={{
+            width: "100%",
+            height: "24rem",
+            backgroundPosition: "center",
+            backgroundColor: "#dadada",
+          }}
+          indicators={false}
+          navButtonsAlwaysVisible={data.image.length > 1}
+          navButtonsAlwaysInvisible={data.image.length <= 1}
         >
-          {data.title}
+          {!data.views.includes(me._id)
+            ? data.image.map((item, i) => (
+                <VisibilitySensor
+                  key={i}
+                  onChange={(isVisible) => {
+                    setState2(isVisible);
+                  }}
+                >
+                  <CardMedia
+                    src={item}
+                    image={item}
+                    sx={{
+                      height: "24rem",
+                      display: "flex",
+                      flexDirection: "row-reverse",
+                      backgroundColor: "#b0bec5",
+                    }}
+                    style={{
+                      backgroundPosition: "center",
+                      objectFit: "cover",
+                      zIndex: "-1",
+                      backgroundSize: "contain",
+                    }}
+                  />
+                </VisibilitySensor>
+              ))
+            : data.image.map((item, i) => (
+                <CardMedia
+                  key={i}
+                  src={item}
+                  image={item}
+                  sx={{
+                    height: "24rem",
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    backgroundColor: "#b0bec5",
+                  }}
+                  style={{
+                    backgroundPosition: "center",
+                    objectFit: "cover",
+                    zIndex: "-1",
+                    backgroundSize: "contain",
+                  }}
+                />
+              ))}
+        </Carousel>
+        <Stack
+          position={"relative"}
+          display={"flex"}
+          flexDirection={"row-reverse"}
+          top={"-40px"}
+          right={"10px"}
+          height={"0px"}
+          zIndex={2}
+        >
+          <IconButton
+            sx={{
+              height: "30px",
+              background: "#ffffff80 !important",
+            }}
+          >
+            <Typography
+              fontSize={"10px"}
+              display={"flex"}
+              flexDirection={"column"}
+              variant="body1"
+              justifyContent={"center"}
+              color="textPrimary"
+              sx={{
+                color: "GrayText",
+              }}
+            >
+              <VisibilityOutlined
+                sx={{ fontSize: "17px", position: "relative", top: "5px" }}
+                color="disabled"
+              />
+              {state2 === true && data.views.includes(me._id) !== true
+                ? data.views.length + 1
+                : data.views.length}
+            </Typography>
+          </IconButton>
+        </Stack>
+        <CardContent>
+          <Stack flexDirection={"row"}>
+            <Typography
+              flexDirection={"row"}
+              variant="body2"
+              color="text.secondary"
+              display={"flex"}
+            >
+              {data.title}
+            </Typography>
+
+            {/* <Stack> */}
+            {/* </Stack> */}
+          </Stack>
+          <Typography
+            sx={{
+              flexDirection: "row",
+              width: "min-content",
+            }}
+            variant="subtitle2"
+            color={"#3999e7"}
+            display={"flex"}
+          >
+            {data.hashTag.map((data, key) => {
+              return (
+                <Link key={key} href="#" underline="none" color={"#3999e7"}>
+                  @{data}
+                </Link>
+              );
+            })}
+          </Typography>
           <Stack>
             <Typography
-              sx={{ cursor: "pointer", flexDirection: "row" }}
+              sx={{ cursor: "pointer", flexDirection: "column" }}
               variant="subtitle2"
               color={"#3999e7"}
               display={"flex"}
             >
-              {data.hashtags.map((data) => {
+              {data.taggedPeople.map((data, i) => {
                 return (
-                  <Link href="#" underline="none" color={"#3999e7"}>
-                    &nbsp; @{data}
+                  <Link href="#" key={i} underline="none" color={"#3999e7"}>
+                    #{data}
                   </Link>
                 );
               })}
             </Typography>
           </Stack>
-        </Typography>
-        <Stack>
-          <Typography
-            sx={{ cursor: "pointer", flexDirection: "column" }}
-            variant="subtitle2"
-            color={"#3999e7"}
-            display={"flex"}
-          >
-            {data.hashtags.map((data) => {
-              return (
-                <Link href="#" underline="none" color={"#3999e7"}>
-                  #{data}
-                </Link>
-              );
-            })}
-          </Typography>
-        </Stack>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Stack width={"100%"}>
-          <Stack width={"100%"} flexDirection={"row"}>
-            <IconButton
-              aria-label="add to favorites"
-              sx={{ display: "flex", flexDirection: "column" }}
-            >
-              <FavoriteIcon color="disabled" />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                fontSize={"8px"}
+        </CardContent>
+        <CardActions disableSpacing>
+          <Stack width={"100%"}>
+            <Stack width={"100%"} flexDirection={"row"}>
+              {like === false ? (
+                <IconButton
+                  aria-label="add to favorites"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "40px",
+                  }}
+                  onClick={() => {
+                    handleLikeButton(data._id, "like");
+                    setLike(true);
+                  }}
+                >
+                  <FavoriteIcon color="disabled" />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    fontSize={"8px"}
+                  >
+                    {data.likes.length}
+                  </Typography>
+                </IconButton>
+              ) : (
+                <IconButton
+                  aria-label="add to favorites"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "40px",
+                  }}
+                  onClick={() => {
+                    handleLikeButton(data._id, "disLike");
+                    setLike(false);
+                  }}
+                >
+                  <FavoriteIcon color="error" />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    fontSize={"8px"}
+                  >
+                    {data.likes.length + state}
+                  </Typography>
+                </IconButton>
+              )}
+              <IconButton
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "40px",
+                }}
+                aria-label="share"
               >
-                {data.likes}
-              </Typography>
-            </IconButton>
-            <IconButton
-              sx={{ display: "flex", flexDirection: "column" }}
-              aria-label="share"
-            >
-              <ShareIcon />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                fontSize={"8px"}
+                <ShareIcon />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontSize={"8px"}
+                >
+                  Share
+                </Typography>
+              </IconButton>
+              <IconButton
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "fit-content",
+                  padding: "4px",
+                }}
+                aria-label="share"
+                onClick={() => {
+                  setUtils({
+                    ...utils,
+                    commentArray: data.comments,
+                    currentPostId: data._id,
+                  });
+                  handleOpenComment(setOpen, open);
+                }}
               >
-                Share
-              </Typography>
-            </IconButton>
-            <IconButton
-              sx={{ display: "flex", flexDirection: "column" }}
-              aria-label="share"
-            >
-              <Comment />
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                fontSize={"8px"}
-              >
-                Comment
-              </Typography>
-            </IconButton>
+                <Comment />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontSize={"8px"}
+                >
+                  Comment
+                </Typography>
+              </IconButton>
+            </Stack>
+            <Stack flexDirection={"column"}>
+              {data.comments.length !== 0 ? (
+                <Stack
+                  padding={".5rem 1rem"}
+                  flexDirection={"row"}
+                  alignItems={"center"}
+                >
+                  <Avatar
+                    variant="circular"
+                    src={data.comments[0].userId.profilePicture}
+                  />
+                  <Chip
+                    variant="filled"
+                    sizes="small"
+                    colors="primary"
+                    label={data.comments[0].comment}
+                    sx={{
+                      width: "fit-content",
+                      height: "25px",
+                      margin: "0px 10px",
+                      cursor: "pointer",
+                    }}
+                  />
+
+                  <Typography variant="body2" fontSize={"10px"} color="primary">
+                    {dayjs(data.comments[0].createdAt).fromNow()}
+                  </Typography>
+                </Stack>
+              ) : (
+                ""
+              )}
+            </Stack>
           </Stack>
-          {/* <Stack>
-            {" "}
-            <FormControl variant="standard">
-              <Input
-                id="input-with-icon-adornment"
-                sx={{ width: "100%", outline: "none" }}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Avatar
-                      variant="circular"
-                      src={me.profilePicture}
-                      alt={me.userName}
-                      sx={{ width: "30px", height: "30px", margin: "1px" }}
-                    />
-                  </InputAdornment>
-                }
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton aria-label="send">
-                      <Send />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </Stack> */}
-        </Stack>
-      </CardActions>
-    </Card>
+        </CardActions>
+      </Card>
+    </>
   );
 }
+
+//             <Stack
+//               padding={".5rem 1rem"}
+//               flexDirection={"row"}
+//               alignItems={"center"}
+//             >
+//               <Avatar
+//                 variant="circular"
+//                 src={data.comments[1].userId.profilePicture}
+//               />
+//               <Chip
+//                 variant="filled"
+//                 sizes="small"
+//                 colors="primary"
+//                 label={data.comments[1].comment}
+//                 sx={{
+//                   width: "fit-content",
+//                   height: "25px",
+//                   margin: "0px 10px",
+//                   cursor: "pointer",
+//                 }}
+//               />
+
+//               <Typography variant="body2" fontSize={"10px"} color="primary">
+//                 {dayjs(data.comments[1].createdAt).fromNow()}
+//               </Typography>
+//             </Stack>

@@ -125,10 +125,12 @@ const Status = () => {
   return (
     <Stack
       direction={"row"}
+      
       sx={{
         width: "100%",
         height: "170px",
         position: "relative",
+        paddingTop:"5px"
       }}
       id="yellow"
     >
@@ -170,7 +172,7 @@ const Status = () => {
           </Stack>
         )}
         {moments.map((info, i) => {
-          return <StatusComponent info={info} />;
+          return <StatusComponent key={i} info={info} />;
         })}
         <StatusComponent
           info={{

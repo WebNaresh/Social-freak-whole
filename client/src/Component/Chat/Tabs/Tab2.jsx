@@ -1,28 +1,17 @@
 import { Stack } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import ReqDisplay from "../ReqDisplay/ReqDisplay";
+import UseContext from "../../../State/UseState/UseContext";
 
 const Tab2 = () => {
+  const { me } = useContext(UseContext);
   return (
     <Stack>
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
-      <ReqDisplay />
+      {me.userSuggestion !== null
+        ? me.userSuggestion.map((data, index) => {
+            return <ReqDisplay key={index} data={data} />;
+          })
+        : ""}
     </Stack>
   );
 };

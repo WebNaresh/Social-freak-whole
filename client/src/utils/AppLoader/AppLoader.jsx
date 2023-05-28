@@ -12,11 +12,17 @@ const AppLoader = () => {
         <Backdrop
           sx={{
             color: appLoading.color,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
+            zIndex: (theme) => 1301,
           }}
           open={true}
         >
-          <CircularProgress color={"inherit"}>
+          {/* noTYOUR */}
+          <CircularProgress
+            sx={{
+              zIndex: (theme) => 1301,
+            }}
+            color={"inherit"}
+          >
             {appLoading.color === "danger" ? <ReportIcon color="danger" /> : ""}
           </CircularProgress>
         </Backdrop>

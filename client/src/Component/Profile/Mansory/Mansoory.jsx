@@ -24,7 +24,7 @@ export default function Mansoory({ me }) {
       />
       <Grid item xs={8}>
         <Grid padding={"4px 0px"} container justifyContent="center" spacing={1}>
-          {me.memories.map(({ img, title }, i) => (
+          {/* {me.memories.map(({ img, title }, i) => (
             <Grid key={i} item>
               <>
                 <Paper
@@ -61,7 +61,7 @@ export default function Mansoory({ me }) {
                 </Typography>
               </>
             </Grid>
-          ))}
+          ))} */}
           <Grid item>
             <>
               <Paper
