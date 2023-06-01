@@ -36,9 +36,7 @@ export const SocketState = (props) => {
     socket.current.on("take-posts", (commingPost) => {
       setPosts((array) => [...array, ...commingPost]);
     });
-    socket.current.on("newUser", (commingPost) => {
-      console.log("newUser", commingPost);
-    });
+    socket.current.on("newUser", (commingPost) => {});
 
     socket.current.on("users", (map) => {
       var newMap = new Map(JSON.parse(map));
@@ -46,12 +44,12 @@ export const SocketState = (props) => {
     });
 
     socket.current.on("get-msg", (data) => {
-      console.log(`🚀 ~ get-msg:`, data.sender);
-      console.log(`🚀 ~ data.sender :`, data.sender);
+      console.log(`🚀 ~ data:`, data);
       if (userId.current === data.sender?._id) {
         setChats((chat) => [...chat, data]);
         if (
-          chat.current[chat.current?.length - 1].sender._id === data.sender._id
+          chat.current[chat.current?.length - 1]?.sender?._id ===
+          data.sender?._id
         ) {
           chat.current[chat.current.length - 1].message.push(data.message);
         } else {
@@ -64,6 +62,7 @@ export const SocketState = (props) => {
         }));
       }
     });
+
     socket.current.on("request", (commingPost) => {
       let suggestedUser = me.userSuggestion.filter(
         (ele) => ele._id !== commingPost._id
@@ -91,19 +90,6 @@ export const SocketState = (props) => {
 
     //eslint-disable-next-line
   }, []);
-  // useEffect(() => {
-  //   if (peerState?._id === null) {
-  //     console.log(`🚀 ~ peerState?._id: is null`, peerState._id);
-  //     // while (true) {
-  //     const peer = new Peer(me._id);
-  //     setPeerState(peer);
-  //     console.log(`🚀 ~ peer:`, peer);
-  //     // if (peerState._id !== null) {
-  //     //   break;
-  //     // }
-  //     // }
-  //   }
-  // }, [peerState]);
 
   useEffect(() => {
     const closeHandler = () => {
@@ -142,8 +128,11 @@ export const SocketState = (props) => {
       peerState.on("call", handler);
       peerState.on("disconnected", () => {
         // if (availableConnection.current === null) {
-        peerState.reconnect();
+        // peerState.reconnect();
         // }
+        const peer = new Peer(me._id);
+        // peerState = peer;
+        setPeerState(peer);
       });
       peerState.on("connection", (connection) => {
         connection.send();
@@ -174,21 +163,3 @@ export const SocketState = (props) => {
   );
 };
 export default SocketState;
-
-// let suggestedUser = me.userSuggestion.filter(
-//   (ele) => ele._id !== commingPost._id
-// );
-// let newFollow = me.followers.push(commingPost);
-// if (!me.followers.includes(commingPost)) {
-//   setMe((Copy) => ({
-//     ...Copy,
-//     friends: [...Copy.friends, commingPost],
-//     userSuggestion: Copy.userSuggestion.filter(
-//       (ele) => ele._id !== commingPost._id
-//     ),
-//     following: Copy.following.filter(
-//       (ele) => ele._id !== commingPost._id
-//     ),
-//     followers: [...Copy.friends, commingPost],
-//   }));
-// }
