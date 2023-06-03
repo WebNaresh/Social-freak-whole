@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import { Edit, Upload } from "@mui/icons-material";
 import { useContext } from "react";
-import UseContext from "../../../State/UseState/UseContext";
-import LoginContext from "../../../State/Login/LoginContext";
+import UseContext from "../../State/UseState/UseContext";
+import LoginContext from "../../State/Login/LoginContext";
 import Carousel from "react-material-ui-carousel";
 
 const CreateModal = React.forwardRef(() => {

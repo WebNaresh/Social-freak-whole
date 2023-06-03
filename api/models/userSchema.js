@@ -40,10 +40,7 @@ const User = new mongoose.Schema(
       type: String,
       default: "Single",
     },
-    post: {
-      type: Array,
-      default: [],
-    },
+    post: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     descriptionHighLight: {
       type: Array,
       default: ["Friend", "Influncer", "Learner"],
@@ -91,5 +88,36 @@ User.methods.getJWTToken = function () {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
+User.statics.getUserData = async function (id) {
+  try {
+    const userData = await this.findOne({ _id: id }).populate([
+      { path: "post", populate: { path: "userId", model: "User" } },
+      { path: "friends", model: "User" },
+      { path: "followers", model: "User" },
+      { path: "following", model: "User" },
+    ]);
 
+    return userData;
+  } catch (error) {
+    // Handle any errors that occurred during the database query
+    console.error(error);
+    return null;
+  }
+};
+User.statics.getUserWithEmail = async function (email) {
+  try {
+    const userData = await this.findOne({ userEmail: email }).populate([
+      { path: "post", populate: { path: "userId", model: "User" } },
+      { path: "friends", model: "User" },
+      { path: "followers", model: "User" },
+      { path: "following", model: "User" },
+    ]);
+
+    return userData;
+  } catch (error) {
+    // Handle any errors that occurred during the database query
+    console.error(error);
+    return null;
+  }
+};
 module.exports = mongoose.model("User", User);

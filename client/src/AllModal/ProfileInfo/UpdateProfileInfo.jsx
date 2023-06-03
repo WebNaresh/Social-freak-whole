@@ -20,9 +20,9 @@ import {
   School,
 } from "@mui/icons-material";
 import { useContext } from "react";
-import UseContext from "../../../../State/UseState/UseContext";
+import UseContext from "../../State/UseState/UseContext";
 import dayjs from "dayjs";
-import LoginContext from "../../../../State/Login/LoginContext";
+import LoginContext from "../../State/Login/LoginContext";
 
 const UpdateProfileInfo = React.forwardRef(() => {
   const { me } = useContext(UseContext);

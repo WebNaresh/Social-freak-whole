@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 import { Edit, Upload } from "@mui/icons-material";
 import { useContext } from "react";
-import UseContext from "../../../../State/UseState/UseContext";
-import LoginContext from "../../../../State/Login/LoginContext";
+import UseContext from "../../State/UseState/UseContext";
+import LoginContext from "../../State/Login/LoginContext";
 
 const UpdateProfileCard = React.forwardRef(() => {
   const { me, formData, setFormData } = useContext(UseContext);
@@ -29,6 +29,8 @@ const UpdateProfileCard = React.forwardRef(() => {
 
   const handlepathWay = (e) => {
     let url = URL.createObjectURL(e.target.files[0]);
+    console.log(`🚀 ~ url:`, url);
+
     setFormData({
       ...formData,
       profileLink: url,
@@ -92,7 +94,7 @@ const UpdateProfileCard = React.forwardRef(() => {
             {" "}
             <Edit color="action" fontSize="1px" />
           </IconButton>
-          {formData.selectedBackgroundPic !== null ? (
+          {/* {formData.selectedBackgroundPic !== null ? (
             <IconButton
               aria-label="Edit Profile"
               style={{ borderRadius: "10px" }}
@@ -107,7 +109,7 @@ const UpdateProfileCard = React.forwardRef(() => {
             </IconButton>
           ) : (
             ""
-          )}
+          )} */}
         </Paper>
 
         <Badge
@@ -136,7 +138,7 @@ const UpdateProfileCard = React.forwardRef(() => {
                     }}
                   />
                 </IconButton>
-                {formData.selectedProfilePic !== null ? (
+                {/* {formData.selectedProfilePic !== null ? (
                   <IconButton
                     aria-label="Edit Profile"
                     style={{ borderRadius: "10px" }}
@@ -156,7 +158,7 @@ const UpdateProfileCard = React.forwardRef(() => {
                   </IconButton>
                 ) : (
                   ""
-                )}
+                )} */}
               </Paper>
             </>
           }
@@ -281,12 +283,12 @@ const UpdateProfileCard = React.forwardRef(() => {
                 sx={{ margin: "1rem auto", width: "5rem" }}
                 variant="contained"
                 color="primary"
-                disabled={
-                  formData.selectedBackgroundPic === null &&
-                  formData.selectedProfilePic === null
-                    ? false
-                    : true
-                }
+                // disabled={
+                //   formData.selectedBackgroundPic === null &&
+                //   formData.selectedProfilePic === null
+                //     ? false
+                //     : true
+                // }
               >
                 Submit
               </Button>
