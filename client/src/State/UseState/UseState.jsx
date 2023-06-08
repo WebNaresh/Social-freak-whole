@@ -85,11 +85,11 @@ export const UseState = (props) => {
     friends: null,
     userSuggestion: [],
   });
-  // console.log(`🚀 ~ me:`, me);
+  console.log(`🚀 ~ me:`, me);
 
   // State for moments
   const [moments, SetMoments] = useState([]);
-  console.log(`🚀 ~ moments:`, moments);
+  // console.log(`🚀 ~ moments:`, moments);
 
   // State for posts
   const [posts, setPosts] = useState([]);
@@ -124,7 +124,7 @@ export const UseState = (props) => {
     buttonDisable: true,
     handleuploadIcon: false,
   });
-  console.log(`🚀 ~ data:`, data);
+  // console.log(`🚀 ~ data:`, data);
 
   // State for utilities
   const [utils, setUtils] = useState({

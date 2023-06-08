@@ -146,8 +146,12 @@ const TextField1 = () => {
                   display: "grid",
                   gridTemplateColumns: "repeat(4, 1fr)",
                   gap: "10px",
-                  padding: "10px",
+                  padding: "0px",
                   width: "100%",
+                  alignContent: "space-evenly",
+                  justifyContent: "space-around",
+                  alignItems: " baseline",
+                  justifyItems: "center",
                 }}
               >
                 {itemData.map((item, index) => (
@@ -169,7 +173,8 @@ const TextField1 = () => {
                       background: `url(${item.img})`,
                       backgroundClip: "content-box",
                       backgroundSize: "contain",
-                      margin: "0px 15px",
+                      margin: "0px 8px",
+                      boxSizing: "border-box",
                     }}
                   ></Paper>
                 ))}

@@ -23,7 +23,8 @@ import {
 import StatusCreateModal from "../../../AllModal/StatusModal/StatusCreateModal";
 
 const Status = () => {
-  const { moments, me, open, setOpen } = React.useContext(UseContext);
+  const { moments, me, open, setOpen, setData, data } =
+    React.useContext(UseContext);
   const [scrollKar, setScrollKar] = useState(0);
   const scrollFirst = useRef(null);
   const ScrollY = () => {
@@ -47,8 +48,8 @@ const Status = () => {
           alignItems: "center",
           flexDirection: "column",
           width: "80px",
-          background: `url(${info.Image}) center no-repeat`,
-          backgroundSize: "contain",
+          background: `url(${info?.backgroundPicture}) center no-repeat`,
+          backgroundSize: "cover",
           margin: "5px 5px",
           cursor: "pointer",
           ":hover": {
@@ -59,10 +60,22 @@ const Status = () => {
           },
         }}
       >
-        {info.userName === "Add Your Own Stories" ? (
+        {info?.userName === "Add Your Own Stories" ? (
           <>
             <IconButton
-              onClick={() => handleOpenStatus(setOpen, open)}
+              onClick={() => {
+                handleOpenStatus(setOpen, open);
+                setData({
+                  ...data,
+                  title: "Add an Title",
+                  hashtagArray: [],
+                  taggedPeopleArray: [],
+                  uploadedImages: [],
+                  imageArray: [],
+                  files: null,
+                  buttonDisable: true,
+                });
+              }}
               variant="circular"
               alt="no"
               sx={{
@@ -115,7 +128,7 @@ const Status = () => {
               >
                 <Avatar
                   variant="circular"
-                  src={info.userId.profilePicture}
+                  src={info?.profilePicture}
                   alt="no"
                   sx={{
                     width: "50px",
@@ -131,11 +144,11 @@ const Status = () => {
                 ></Avatar>
                 <svg
                   style={{
-                    position: "absolute",
+                    position: "inherit",
                     left: "0px",
                     right: "0px",
-                    height: "90px",
-                    width: "90px",
+                    height: "85px",
+                    width: "85px",
                     margin: "auto",
                   }}
                   viewBox="0 0 100 100"
@@ -147,7 +160,6 @@ const Status = () => {
                 sx={{
                   textAlign: "center",
                   position: "relative",
-                  bottom: "-50px",
                   fontSize: "11px",
                   background: "#00000070",
                   width: "inherit",
@@ -157,7 +169,7 @@ const Status = () => {
                 variant="body2"
                 color="#ffffff"
               >
-                {info.userId.userName}
+                {info?.userName}
               </Typography>
             </div>
           </>
@@ -220,8 +232,11 @@ const Status = () => {
             userName: "Add Your Own Stories",
           }}
         />
-        {moments.map((info, i) => {
-          return <StatusComponent key={i} info={info} />;
+        {me?.memories?.length > 0 ? <StatusComponent info={me} /> : ""}
+        {me.following.map((info, i) => {
+          if (me?.memories?.length > 0) {
+            return <StatusComponent key={i} info={info} />;
+          }
         })}
       </Stack>
       <Modal

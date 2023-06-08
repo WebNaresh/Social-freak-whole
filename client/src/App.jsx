@@ -16,6 +16,7 @@ import SocketState from "./State/Socket/ScoketState";
 import CallAlert from "./utils/AppAlert/CallAlert";
 import TextField1 from "./utils/TextField/TextField1";
 import { useState } from "react";
+import Stories from "./Component/Stories/Stories";
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
@@ -56,8 +57,9 @@ function App() {
                     <CallAlert />
                     <TopNav />
                     <Backdrop />
-                    <Route />
+                    {/* <Route /> */}
                     <TextField1 />
+                    <Stories />
                     <BasicSpeedDial />
                   </SocketState>
                 </UseEffectState>
