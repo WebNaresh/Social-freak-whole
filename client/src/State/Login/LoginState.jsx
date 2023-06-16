@@ -455,7 +455,7 @@ export const LoginState = (props) => {
       // userId, Message, images, localDate;
 
       const data1 = {
-        images: uploadedImages,
+        images: uploadedImages[0],
         Message: data.title,
         localDate: new Date(),
       };

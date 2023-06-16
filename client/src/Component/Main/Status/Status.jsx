@@ -13,6 +13,7 @@ import {
   IconButton,
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useRef } from "react";
 import UseContext from "../../../State/UseState/UseContext";
@@ -232,10 +233,21 @@ const Status = () => {
             userName: "Add Your Own Stories",
           }}
         />
-        {me?.memories?.length > 0 ? <StatusComponent info={me} /> : ""}
+        {me?.memories?.length > 0 ? (
+          <Link to={"/stories"} state={-1}>
+            <StatusComponent info={me} />{" "}
+          </Link>
+        ) : (
+          ""
+        )}
         {me.following.map((info, i) => {
-          if (me?.memories?.length > 0) {
-            return <StatusComponent key={i} info={info} />;
+          if (info.memories.length > 0) {
+            return (
+              <Link key={i} to={"/stories"} state={i + 1}>
+                {" "}
+                <StatusComponent key={i} info={info} />
+              </Link>
+            );
           }
         })}
       </Stack>

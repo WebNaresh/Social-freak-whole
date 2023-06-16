@@ -89,7 +89,6 @@ export const UseState = (props) => {
 
   // State for moments
   const [moments, SetMoments] = useState([]);
-  // console.log(`🚀 ~ moments:`, moments);
 
   // State for posts
   const [posts, setPosts] = useState([]);
@@ -124,7 +123,6 @@ export const UseState = (props) => {
     buttonDisable: true,
     handleuploadIcon: false,
   });
-  // console.log(`🚀 ~ data:`, data);
 
   // State for utilities
   const [utils, setUtils] = useState({

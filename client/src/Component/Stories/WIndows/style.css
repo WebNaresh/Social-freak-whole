@@ -1,6 +1,5 @@
-.swiper-container {
-  /* max-height: 100vh; Limit the height to the viewport height */
-  height: 92vh; /* Limit the height to the viewport height */
+/* .swiper-container {
+  height: 92vh;
 }
 .swiper-slide-next {
   justify-content: start !important;
@@ -36,4 +35,4 @@
     transform: translate3d(-35%, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1) !important;
     z-index: 1;
   }
-}
+} */

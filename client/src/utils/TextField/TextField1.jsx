@@ -43,7 +43,6 @@ const TextField1 = () => {
       reciever: utils.cuurentUserIdForMsg,
       sender: me,
     };
-    console.log(`🚀 ~ data1:`, data1);
 
     socket.current.emit("send-Message", data);
 
@@ -60,7 +59,7 @@ const TextField1 = () => {
         <>
           <Stack
             justifyContent={"center"}
-            alignItems={"center"}
+            alignItems={"end"}
             direction={"column"}
             sx={{
               position: "fixed",
@@ -68,6 +67,7 @@ const TextField1 = () => {
               right: "0rem",
               left: "0rem",
               zIndex: 1,
+              display: "none",
             }}
           >
             <TextField
@@ -87,6 +87,10 @@ const TextField1 = () => {
                   md: "22rem",
                   xl: "22rem",
                 },
+                // transform: {
+                //   md: "translate(100%,0px)",
+                //   xl: "translate(100%,0px)",
+                // },
               }}
               InputProps={{
                 style: { borderRadius: "100px", margin: "0px 15px" },
@@ -95,7 +99,7 @@ const TextField1 = () => {
                   <InputAdornment
                     sx={{
                       marginTop: "0px !important",
-                      display: "flex",
+                      disxplay: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
